@@ -1,0 +1,88 @@
+\documentclass[class=minimal,border=.5cm]{standalone}
+\usepackage{relsize}
+\usepackage{tikz}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{positioning}
+
+\begin{document}
+
+\begin{tikzpicture}[
+	background rectangle/.style={fill=white},
+	show background rectangle,
+]
+	\begin{scope}[
+		scale=1.75,
+		every node/.style={
+			align=center,
+			fill=white,
+		},
+	]
+		\path (0,0) node[text=blue] (O0) {-O0}
+			-- ++(0, -1) node[text=blue!50!red] (O1) {-O1}
+			-- ++(0, -1) node[text=red!50!black] (O2) {-O2}
+			-- ++(0, -1) node[text=red] (O3) {-O3}
+			-- ++(0, -1) node[text=red!50!orange] (Ofast) {-Ofast};
+
+		\path (O2) -- ++(-1.5, 0) node[text=black!60!green] (Os) {-Os}
+			-- ++(-1.5, 0) node[text=black!30!green] (Oz) {-Oz};
+
+		\path (O2) -- ++(2, 0) node[text=black!25!magenta] (Og) {-Og};
+	\end{scope}
+
+	\begin{scope}[
+		every path/.style={
+			->,
+			shorten <=.1cm,
+			shorten >=.1cm,
+		},
+	]
+		\draw (O0) -> (O1);
+		\draw (O1) -> (O2);
+		\draw (O2) -> (O3);
+		\draw (O3) -> (Ofast);
+
+		\draw (O1) -> (Os);
+		\draw (Os) -> (Oz);
+
+		\draw (O1) -> (Og);
+	\end{scope}
+
+	\begin{scope}[
+		every node/.style={
+			anchor=north,
+			fill=white,
+		},
+	]
+		\newcommand{\labeldist}{++(0, -.25)};
+
+		\path (O0) -- \labeldist node {\smaller[2] (no optimization)};
+		\path (O1) -- \labeldist node {\smaller[2] (minimal optimization)};
+		\path (O2) -- \labeldist node {\smaller[2] (optimize for speed)};
+		\path (O3) -- \labeldist node {\smaller[2] (aggressive optimization)};
+		\path (Ofast) -- \labeldist node {\smaller[2] (non-standards compliant)};
+
+		\path (Os) -- \labeldist node {\smaller[2] (optimize for size)};
+		\path (Oz) -- \labeldist node {\smaller[2] (aggressive size)};
+
+		\path (Og) -- \labeldist node {\smaller[2] (optimize for debugging)};
+	\end{scope}
+
+	\begin{scope}[
+			every node/.style={
+				font=\smaller[1],
+			},
+			every path/.style={
+				double,
+				->,
+				color=gray,
+			},
+		]
+
+		\draw[color=blue!50] (O0) ++(0, .75) -- ++(0, .5) node[anchor=south, text=blue!50] {compilation time};
+		\draw[color=orange] (Ofast) ++(0, -1.25) -- ++(0, -.5) node[anchor=north, text=orange] {performance};
+		\draw[color=black!25!green] (Oz) ++(-1.25, 0) -- ++(-.5, 0) node[rotate=90, anchor=south, text=black!25!green] {code size};
+		\draw[color=magenta] (Og) ++(1.25, 0) -- ++(.5, 0) node[rotate=-90, anchor=south, text=magenta] {debugging};
+	\end{scope}
+\end{tikzpicture}
+
+\end{document}
